@@ -1,4 +1,4 @@
 .#PACKAGE#/%.o++: ../../src/main/c++#PACKAGE#/%.c++
     @mkdir -p .#PACKAGE#
-    ${CXX} ${CXXFLAGS} ${CPPFLAGS} -c ${input} -o ${output}
+    ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c ${input} -o ${output}
 
