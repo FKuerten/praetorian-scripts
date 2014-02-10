@@ -18,7 +18,7 @@
 #
 
 PREFIX="$1"
-if [ -z "${PREFIX}"] ; then
+if [ -z "${PREFIX}" ] ; then
     echo "Need to specify a prefix to create a version header." >&2
     exit 1
 fi
