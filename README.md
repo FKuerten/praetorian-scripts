@@ -1,1 +1,1 @@
-Some script is use often for compiling C++ projects.
+Some script I use often for compiling C++ projects.
