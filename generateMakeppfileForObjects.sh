@@ -21,6 +21,9 @@ SRC_FOLDER="src/main/c++"
 FOLDERS=$(find ${SRC_FOLDER} -type d | grep -v "/\.")
 MAKEPPFILE_TEMPLATE="scripts/MakeppfileForObjectsTemplate"
 
+echo "MODULEDIR:=../.."
+echo "include ../../config.mk"
+
 for FOLDER in ${FOLDERS}; do
     PACKAGE=${FOLDER#src/main/c++*}
     #echo ${FOLDER}
