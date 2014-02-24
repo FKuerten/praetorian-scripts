@@ -28,6 +28,9 @@ for FILE in ${FILES}; do
     #echo ${FILE}
     #echo ${PACKAGE_FILE_EXT}
     #echo ${PACKAGE_FILE}
-    echo "${TARGET_FOLDER}${OBJECT}"
+    TARGET_FILE="${TARGET_FOLDER}${OBJECT}"
+    TARGET_PACKAGE=$(dirname ${TARGET_FILE})
+    mkdir -p ${TARGET_PACKAGE}
+    echo "${TARGET_FILE}"
 done
 
