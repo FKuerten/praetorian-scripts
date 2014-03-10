@@ -19,7 +19,7 @@
 
 SRC_FOLDER="src/main/c++"
 TARGET_FOLDER="target/objects"
-FILES=$(find ${SRC_FOLDER} -type f -name "*.c++")
+FILES=$(find -L ${SRC_FOLDER} -type f -name "*.c++")
 
 for FILE in ${FILES}; do
     PACKAGE_FILE_EXT=${FILE#src/main/c++*}
