@@ -17,17 +17,20 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-SRC_FOLDER="src/main/c++"
+MODULEDIR="$1"
+SPECIAL_FLAGS_NAME="$2"
+SRC_FOLDER="${MODULEDIR}/src/main/c++"
 FOLDERS=$(find -L ${SRC_FOLDER} -type d | grep -v "/\.")
-MAKEPPFILE_TEMPLATE="scripts/MakeppfileForObjectsTemplate"
+MAKEPPFILE_TEMPLATE="${MODULEDIR}/scripts/MakeppfileForObjectsTemplate"
 
 echo "MODULEDIR:=../.."
 echo "include ../../config.mk"
 echo "include ../../scripts/makefile.mk"
 
 for FOLDER in ${FOLDERS}; do
-    PACKAGE=${FOLDER#src/main/c++*}
+    PACKAGE=${FOLDER#${SRC_FOLDER}*}
     #echo ${FOLDER}
     #echo ${PACKAGE}
-    sed <${MAKEPPFILE_TEMPLATE} --expression="s!#PACKAGE#!${PACKAGE}!g"
+    sed <${MAKEPPFILE_TEMPLATE} --expression="s!#PACKAGE#!${PACKAGE}!g" \
+                                --expression="s!#SPECIAL_FLAGS_NAME#!${SPECIAL_FLAGS_NAME}!g"
 done

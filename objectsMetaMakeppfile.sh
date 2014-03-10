@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #
 #   Copyright 2014 Fabian "Praetorian" Kürten
 #
@@ -15,10 +17,25 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-.#PACKAGE#/%.o++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
-    ${CXX} ${CPPFLAGS} ${CXXFLAGS} ${#SPECIAL_FLAGS_NAME#} -c ${input} -o ${output}
+#
+#   This file creates a makeppfile to create makeppfiles for the objects.
+#
+#
 
-.#PACKAGE#/%.E++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
-    ${CXX} ${CPPFLAGS} ${CXXFLAGS} ${#SPECIAL_FLAGS_NAME#} -E -CC ${input} -o ${output}
+MODULEDIR="$1"
+shift
+VARIANTS="$@"
+MAKEPPFILE_TEMPLATE="${MODULEDIR}/scripts/objectsMakeppfile.mk.template"
+
+echo "MODULEDIR:=.."
+echo "include ../config.mk"
+echo "include ../scripts/makefile.mk"
+
+for VARIANT in ${VARIANTS}; do
+    FOLDER="objects-${VARIANT}"
+    UPPERCASED=$(echo ${VARIANT} | tr [:lower:] [:upper:] | tr '-' '_')
+    SPECIAL_FLAGS_NAME="CXXFLAGS_${UPPERCASED}"
+
+    sed <${MAKEPPFILE_TEMPLATE} --expression="s!#FOLDER#!${FOLDER}!g" \
+                                --expression="s!#SPECIAL_FLAGS_NAME#!${SPECIAL_FLAGS_NAME}!g"
+done

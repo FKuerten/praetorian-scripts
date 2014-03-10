@@ -15,10 +15,12 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-.#PACKAGE#/%.o++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
-    ${CXX} ${CPPFLAGS} ${CXXFLAGS} ${#SPECIAL_FLAGS_NAME#} -c ${input} -o ${output}
+include scripts/makefile.mk
 
-.#PACKAGE#/%.E++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
-    ${CXX} ${CPPFLAGS} ${CXXFLAGS} ${#SPECIAL_FLAGS_NAME#} -E -CC ${input} -o ${output}
+PROJECT_NAME=${MODULE_NAME}
+include scripts/objectsMetaMakeppfile.mk
+include scripts/version.mk
+
+load_makefile target/objectsMakeppfile.mk
+load_makefile target/objects-${CXX_VARIANTS}/Makeppfile
+load_makefile ${MODULEDIR}/../${TRANSITIVE_DEPENDENCIES}

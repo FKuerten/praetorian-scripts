@@ -15,6 +15,24 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+#Warnings
+CXX_WARNINGS=-Wall -Wdisabled-optimization -Wfloat-equal -Wold-style-cast
+CXX_WARNINGS+=-Wsign-conversion -Wsign-promo -Wswitch-default
+CXX_WARNINGS+=-Wzero-as-null-pointer-constant -Wuseless-cast
+
+# Some special flags
+CXXFLAGS:=--std=${CXX_STANDARD} ${CXX_WARNINGS} -Werror
+CXXFLAGS_STATIC:=
+CXXFLAGS_DYNAMIC:=-fPIC
+CXXFLAGS_DEBUG:=-g -O0
+CXXFLAGS_NODEBUG:=-O2
+CXXFLAGS_STATIC_NODEBUG:=${CXXFLAGS_STATIC} ${CXXFLAGS_NODEBUG}
+CXXFLAGS_STATIC_DEBUG:=${CXXFLAGS_STATIC} ${CXXFLAGS_DEBUG}
+CXXFLAGS_DYNAMIC_NODEBUG:=${CXXFLAGS_DYNAMIC} ${CXXFLAGS_NODEBUG}
+CXXFLAGS_DYNAMIC_DEBUG:=${CXXFLAGS_DYNAMIC} ${CXXFLAGS_DEBUG}
+CXX_VARIANTS=static-debug static-nodebug dynamic-debug dynamic-nodebug
+ARFLAGS:=crvs
+
 # Start with no include directories
 INCLUDEDIRS:=
 
@@ -39,10 +57,6 @@ INCLUDEDIRS+=${MODULEDIR}/target/generated
 
 CPPFLAGS+=-I${INCLUDEDIRS}
 
-PROJECT_NAME=${MODULE_NAME}
-include scripts/objectsMakeppfile.mk
-include scripts/version.mk
-
 $(phony FORCE):
     @true
 
@@ -58,10 +72,11 @@ else
 	DEPLIBS:=
 endif
 
-load_makefile ${MODULEDIR}/target/objects/Makeppfile
-load_makefile ${MODULEDIR}/../${TRANSITIVE_DEPENDENCIES}
 
-OBJECTS:=$(shell ${MODULEDIR}/scripts/findObjects.sh)
+OBJECTS_STATIC_NODEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} static-nodebug)
+OBJECTS_STATIC_DEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} static-debug)
+OBJECTS_DYNAMIC_NODEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} dynamic-nodebug)
+OBJECTS_DYNAMIC_DEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} dynamic-debug)
 ALLLIBS=${LIBS} ${DEPLIBS}
 
 target/dependencies: ${DEPENDENCY_FILES}
