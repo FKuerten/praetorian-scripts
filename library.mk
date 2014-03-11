@@ -24,11 +24,11 @@ $(phony libraries): target/${MODULE_STATIC_NODEBUG_LIBRARY} target/${MODULE_STAT
 
 target/${MODULE_STATIC_NODEBUG_LIBRARY}: ${OBJECTS_STATIC_NODEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
-	${AR} ${ARFLAGS} ${output} ${OBJECTS}
+	${AR} ${ARFLAGS} ${output} ${inputs}
 
 target/${MODULE_STATIC_DEBUG_LIBRARY}: ${OBJECTS_STATIC_DEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
-	${AR} ${ARFLAGS} ${output} ${OBJECTS}
+	${AR} ${ARFLAGS} ${output} ${inputs}
 
 target/${MODULE_DYNAMIC_NODEBUG_LIBRARY}.${MODULE_MAJOR_VERSION}.${MODULE_MINOR_VERSION} target/${MODULE_DYNAMIC_NODEBUG_LIBRARY}.${MODULE_MAJOR_VERSION} target/${MODULE_DYNAMIC_NODEBUG_LIBRARY} : ${OBJECTS_DYNAMIC_NODEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
