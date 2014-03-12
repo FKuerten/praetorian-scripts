@@ -14,8 +14,9 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+makepp_no_builtin = 1
 
-CREATE_DIR:=$(shell if [ ! -e #FOLDER# ]; then mkdir -p #FOLDER#; echo "mkdir -p #FOLDER#"; fi)
+CREATE_DIR:=$(print $(shell if [ ! -e #FOLDER# ]; then mkdir -p #FOLDER#; echo "mkdir -p #FOLDER#"; fi))
 
 # This recreates the Makeppfile responsible for building the objects
 ./#FOLDER#/Makeppfile: ./#FOLDER#/Makeppfile.auto

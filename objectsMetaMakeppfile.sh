@@ -29,7 +29,7 @@ MAKEPPFILE_TEMPLATE="${MODULEDIR}/scripts/objectsMakeppfile.mk.template"
 
 echo "MODULEDIR:=.."
 echo "include ../config.mk"
-echo "include ../scripts/makefile.mk"
+echo "include ../scripts/common.mk"
 
 for VARIANT in ${VARIANTS}; do
     FOLDER="objects-${VARIANT}"

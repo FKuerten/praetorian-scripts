@@ -15,19 +15,10 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-#
-#	This one is a bit crazy.
-#   This makefile is responsible for creating the makefile to create the
-#   makefiles to create the objects.
-#   Confused?
-#   It creates target/objectsMakeppfile.mk from
-#   scripts/objectsMakeppfile.mk with scripts/objectsMetaMakeppfile.sh
-#
-
-CREATE_DIR:=($print $(shell if [ ! -e ${MODULEDIR}/target ]; then mkdir -p ${MODULEDIR}/target; echo "mkdir -p ${MODULEDIR}/target"; fi))
+CREATE_DIR:=$(print $(shell if [ ! -e ${MODULEDIR}/target ]; then mkdir -p ${MODULEDIR}/target; echo "mkdir -p ${MODULEDIR}/target"; fi))
 
 # This recreates the Makeppfile responsible for building the makefile for building the objects
-${MODULEDIR}/target/objectsMakeppfile.mk: ${MODULEDIR}/target/objectsMakeppfile.mk.auto
+${MODULEDIR}/dependencies.mk: ${MODULEDIR}/dependencies.mk.auto
 	# We are checking if they are the same
     @if [ -e ${output} ] && diff --brief ${input} ${output} >/dev/null ; then \
         true; \
@@ -36,10 +27,10 @@ ${MODULEDIR}/target/objectsMakeppfile.mk: ${MODULEDIR}/target/objectsMakeppfile.
         cp ${input} ${output}; \
     fi
 
-${MODULEDIR}/target/objectsMakeppfile.mk.auto: ${MODULEDIR}/scripts/objectsMetaMakeppfile.sh ${MODULEDIR}/scripts/objectsMakeppfile.mk.template
-    @${MODULEDIR}/scripts/objectsMetaMakeppfile.sh ${MODULEDIR} ${CXX_VARIANTS} > ${output}
-    @if [ -e ${MODULEDIR}/target/objectsMakeppfile.mk ] && diff --brief ${output} ${MODULEDIR}/target/objectsMakeppfile.mk >/dev/null ; then \
+${MODULEDIR}/dependencies.mk.auto: FORCE ${MODULEDIR}/scripts/dependenciesMakeppfile.sh
+    @${MODULEDIR}/scripts/dependenciesMakeppfile.sh ${MODULEDIR} > ${output}
+    @if [ -e ${MODULEDIR}/target/dependencies.mk ] && diff --brief ${output} ${MODULEDIR}/target/dependencies.mk >/dev/null ; then \
         true; \
     else \
-        echo "${MODULEDIR}/scripts/objectsMetaMakeppfile.sh ${MODULEDIR} ${CXX_VARIANTS} > ${output}"; \
+        echo "${MODULEDIR}/scripts/dependenciesMakeppfile.sh ${MODULEDIR} > ${output}"; \
     fi

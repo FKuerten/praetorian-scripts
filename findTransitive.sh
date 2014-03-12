@@ -16,15 +16,18 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 MODULEDIR="$1"
-shift
+TYPE="$2"
+shift 2
+DEPENDENCIES="$@"
 TEMPFILE=$(mktemp)
-for DEPENDENCY in "$@"; do
-    echo ${DEPENDENCY} >> ${TEMPFILE}
-    SUB_DIR="${MODULEDIR}/../${DEPENDENCY}"
-    CONFIG_FILE="${SUB_DIR}/config.mk"
-    SUB_DEPENDENCIES=$(grep <${CONFIG_FILE} "^DEPENDENCIES=" | cut -d'=' -f2)
-    $0 ${SUB_DIR} ${SUB_DEPENDENCIES} >> ${TEMPFILE}
+for DEPENDENCY in ${DEPENDENCIES}; do
+    echo ${DEPENDENCY}
+    #echo ${DEPENDENCY} >> ${TEMPFILE}
+    #SUB_DIR="${MODULEDIR}/../${DEPENDENCY}"
+    #CONFIG_FILE="${SUB_DIR}/config.mk"
+    #SUB_DEPENDENCIES=$(grep <${CONFIG_FILE} "^DEPENDENCIES=" | cut -d'=' -f2)
+    #$0 ${SUB_DIR} ${SUB_DEPENDENCIES} >> ${TEMPFILE}
 done
 
-cat ${TEMPFILE} | sort --unique
+#cat ${TEMPFILE} | sort --unique
 rm ${TEMPFILE}

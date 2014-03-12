@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 #
 #   Copyright 2014 Fabian "Praetorian" Kürten
 #
@@ -16,21 +14,22 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+makepp_no_builtin = 1
 
-MODULEDIR="$1"
-SPECIAL_FLAGS_NAME="$2"
-SRC_FOLDER="${MODULEDIR}/src/main/c++"
-FOLDERS=$(find -L ${SRC_FOLDER} -type d | grep -v "/\.")
-MAKEPPFILE_TEMPLATE="${MODULEDIR}/scripts/MakeppfileForObjectsTemplate"
+MODULEDIR=..
+include ${MODULEDIR}/config.mk
+include ${MODULEDIR}/common.mk
+include ${MODULEDIR}/scripts/dependenciesMakeppfile.mk
 
-echo "MODULEDIR:=../.."
-echo "include ../../config.mk"
-echo "include ../../scripts/common.mk"
+ifntrue ${CXX_VARIANTS}
+    foo:=$(print error: CXX_VARIANTS is empty)
+endif
 
-for FOLDER in ${FOLDERS}; do
-    PACKAGE=${FOLDER#${SRC_FOLDER}*}
-    #echo ${FOLDER}
-    #echo ${PACKAGE}
-    sed <${MAKEPPFILE_TEMPLATE} --expression="s!#PACKAGE#!${PACKAGE}!g" \
-                                --expression="s!#SPECIAL_FLAGS_NAME#!${SPECIAL_FLAGS_NAME}!g"
-done
+include ${MODULEDIR}/scripts/objectsMetaMakeppfile.mk
+
+load_makefile ${MODULEDIR}/Makeppfile
+
+include objectsMakeppfile.mk
+
+load_makefile objects-${CXX_VARIANTS}/Makeppfile
+

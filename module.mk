@@ -15,12 +15,19 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-include scripts/makefile.mk
+#
+#	This should only be included by the module root Makeppfile
+#
+
+target/Makeppfile: scripts/targetMakeppfile.template
+	@mkdir -p target
+	cp ${input} ${output}
+
+include scripts/common.mk
+
+load_makefile target/Makeppfile
 
 PROJECT_NAME=${MODULE_NAME}
-include scripts/objectsMetaMakeppfile.mk
 include scripts/version.mk
 
-load_makefile target/objectsMakeppfile.mk
-load_makefile target/objects-${CXX_VARIANTS}/Makeppfile
 load_makefile ${MODULEDIR}/../${TRANSITIVE_DEPENDENCIES}

@@ -15,6 +15,11 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+#
+#   This should only be included by the module root Makeppfile
+#
+include scripts/common.mk
+
 MODULE_STATIC_NODEBUG_LIBRARY:=lib${MODULE_NAME}.a
 MODULE_STATIC_DEBUG_LIBRARY:=lib${MODULE_NAME}-debug.a
 MODULE_DYNAMIC_NODEBUG_LIBRARY:=lib${MODULE_NAME}.so
@@ -22,6 +27,7 @@ MODULE_DYNAMIC_DEBUG_LIBRARY:=lib${MODULE_NAME}-debug.so
 
 $(phony libraries): target/${MODULE_STATIC_NODEBUG_LIBRARY} target/${MODULE_STATIC_DEBUG_LIBRARY} target/${MODULE_DYNAMIC_NODEBUG_LIBRARY} target/${MODULE_DYNAMIC_DEBUG_LIBRARY}
 
+# static libraries, nodebug and debug versions
 target/${MODULE_STATIC_NODEBUG_LIBRARY}: ${OBJECTS_STATIC_NODEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${AR} ${ARFLAGS} ${output} ${inputs}
