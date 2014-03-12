@@ -51,8 +51,8 @@ while true; do
 
     if [ ${DIRTY} -ne 0 ]; then
         echo -e "\t\e[0;31mNeeds manual work!\e[0m"
-        echo -e "\tI can give you a \e[1mshell\e[0m to commit this, \e[1mskip\e[0m this submodule or \e[1mabort\e[0m."
-        select COMMAND in "shell" "skip" "abort"; do
+        echo -e "\tI can give you a \e[1mshell\e[0m to commit this, \e[1mskip\e[0m this submodule, \e[1mabort\e[0m or start \e[1mgit gui\e[0m."
+        select COMMAND in "shell" "skip" "abort" "gui"; do
             case ${COMMAND} in
                 shell)
                     echo -e "\tI am starting a sub shell for you in this submodule. Exiting will return to me."
@@ -63,6 +63,9 @@ while true; do
                 abort)
                     echo "Okay, aborting."
                     exit 1;;
+                gui)
+                    git gui
+                    break;;
             esac
         done
     elif [ ${FAST_FORWARD_PULL} -ne 0 ]; then
