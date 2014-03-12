@@ -22,14 +22,8 @@
 #
 #
 
-MODULEDIR="$1"
-shift
 VARIANTS="$@"
-MAKEPPFILE_TEMPLATE="${MODULEDIR}/scripts/objectsMakeppfile.mk.template"
-
-echo "MODULEDIR:=.."
-echo "include ../config.mk"
-echo "include ../scripts/common.mk"
+MAKEPPFILE_TEMPLATE="scripts/objectsMakeppfile.mk.template"
 
 for VARIANT in ${VARIANTS}; do
     FOLDER="objects-${VARIANT}"
@@ -37,5 +31,6 @@ for VARIANT in ${VARIANTS}; do
     SPECIAL_FLAGS_NAME="CXXFLAGS_${UPPERCASED}"
 
     sed <${MAKEPPFILE_TEMPLATE} --expression="s!#FOLDER#!${FOLDER}!g" \
-                                --expression="s!#SPECIAL_FLAGS_NAME#!${SPECIAL_FLAGS_NAME}!g"
+                                --expression="s!#SPECIAL_FLAGS_NAME#!${SPECIAL_FLAGS_NAME}!g" \
+                                --expression="s!#VARIANT#!${VARIANT}!g"
 done

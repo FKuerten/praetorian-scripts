@@ -16,51 +16,18 @@
 #
 include config.mk
 include scripts/cxx.mk
+include scripts/transitive.mk
 
 $(phony FORCE):
 	@true
 
 ARFLAGS:=crvs
 
-#
-#	Dependency and library stuff
-#
-#	This varies based on static and dynamic releases
-#
-# Input:
-#   DEPENDENCIES          this lists only modules of this type they must
-#                         be located in ../${NAME} they can be static,
-#                         dynamic or objects
-#   STATIC_LIBRARIES      these are libraries that must be linked
-#                         statically
-#   DYNAMIC_LIBRARIES     these are librearis that must be linked
-#                         dynamically
-#   LIBRARIES             these are libraries that can be linked either
-#                         way
-#
-# The output obviously depends on the type of artifact we produce
-# (though for now there is no difference between debug and nodebug
-# versions)
-#
-# For the produced static libraries we need to list all required
-# libraries and modules (libraries + headers)
-#   TRANSITIVE_STATIC_LIBRARIES     these are the STATIC_LIBRARIES and
-#                                   all TRANSITIVE_STATIC_LIBRARIES from
-#                                   any dependency
-#   TRANSITIVE_DYNAMIC_LIBRARIES    these are the DYNAMIC_LIBRARIES and
-#                                   all TRANSITIVE_DYNAMIC_LIBRARIES
-#                                   from any dependency
-#   TRANSITIVE_LIBRARIES            these are the LIBRARIES and all
-#                                   TRANSITIVE_LIBRARIES from any
-#                                   dependency
-#   TRANSITIVE_INCLUDES             these are our headers and all
-#                                   TRANSITIVE_INCLUDES from any
-#                                   dependency
-
-include scripts/dependenciesMakeppfile.mk
-include target/dependencies.mk
 include scripts/version.mk
-
+include scripts/objectsMetaMakeppfile.mk
+include target/metaObjects.mk
+#DUMMY:=$(print $(shell mkdir --verbose --parents target/objects-${CXX_VARIANTS}))
+include target/objects-${CXX_VARIANTS}/objects.mk
 
 #
 #	CPP Stuff
@@ -68,12 +35,12 @@ include scripts/version.mk
 
 INCLUDEDIRS:=
 # If we have transitive dependencies, include their headers
-iftrue ${TRANSITIVE_INCLUDES}
-	INCLUDEDIRS+=${MODULEDIR}/../${TRANSITIVE_INCLUDES}/src/main/c++
+iftrue ${TRANSITIVE_DEPENDENCIES}
+	INCLUDEDIRS+=../${TRANSITIVE_DEPENDENCIES}/src/main/c++
 endif
 
 # Include our generated sources
-INCLUDEDIRS+=${MODULEDIR}/target/generated
+INCLUDEDIRS+=target/generated
 
 # Include transitive dependencies generated sources
 # (skipped for now)
@@ -93,13 +60,14 @@ CPPFLAGS+=-I${INCLUDEDIRS}
 #	DEPLIBS:=
 #endif
 
-
-OBJECTS_STATIC_NODEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} static-nodebug)
-OBJECTS_STATIC_DEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} static-debug)
-OBJECTS_DYNAMIC_NODEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} dynamic-nodebug)
-OBJECTS_DYNAMIC_DEBUG:=$(shell ${MODULEDIR}/scripts/findObjects.sh ${MODULEDIR} dynamic-debug)
+OBJECTS_STATIC_NODEBUG:=$(shell scripts/findObjects.sh . static-nodebug)
+OBJECTS_STATIC_DEBUG:=$(shell scripts/findObjects.sh . static-debug)
+OBJECTS_DYNAMIC_NODEBUG:=$(shell scripts/findObjects.sh . dynamic-nodebug)
+OBJECTS_DYNAMIC_DEBUG:=$(shell scripts/findObjects.sh . dynamic-debug)
 
 #ALLLIBS=${LIBS} ${DEPLIBS}
 #
 #target/dependencies: ${DEPENDENCY_FILES}
 #    echo ${ALLLIBS} > ${output}
+
+load_makefile ../${TRANSITIVE_DEPENDENCIES}

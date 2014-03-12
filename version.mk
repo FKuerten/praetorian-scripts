@@ -28,9 +28,9 @@ target/generated/version.h++: target/generated/version.h++.auto
 
 target/generated/version.h++.auto: FORCE scripts/generateVersionH++.sh
     @if [ ! -e target/generated ]; then mkdir -p target/generated; echo "mkdir -p target/generated"; fi
-    @./scripts/generateVersionH++.sh ${PROJECT_NAME} > ${output}
+    @./scripts/generateVersionH++.sh ${MODULE_NAME} > ${output}
     @if [ -e target/generated/version.h++ ] && diff --brief ${output} target/generated/version.h++ >/dev/null ; then \
         true; \
     else \
-        echo "./scripts/generateVersionH++.sh ${PROJECT_NAME} > ${output}"; \        
+        echo "./scripts/generateVersionH++.sh ${MODULE_NAME} > ${output}"; \
     fi

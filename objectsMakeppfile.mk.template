@@ -14,12 +14,10 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-makepp_no_builtin = 1
-
-CREATE_DIR:=$(print $(shell if [ ! -e #FOLDER# ]; then mkdir -p #FOLDER#; echo "mkdir -p #FOLDER#"; fi))
+CREATE_DIR:=$(print $(shell if [ ! -e target/#FOLDER# ]; then mkdir -pv target/#FOLDER#; echo "mkdir -pv target/#FOLDER#"; fi))
 
 # This recreates the Makeppfile responsible for building the objects
-./#FOLDER#/Makeppfile: ./#FOLDER#/Makeppfile.auto
+target/#FOLDER#/objects.mk: target/#FOLDER#/objects.mk.auto
     @if [ -e ${output} ] && diff --brief ${input} ${output} >/dev/null ; then \
         true; \
     else \
@@ -27,10 +25,10 @@ CREATE_DIR:=$(print $(shell if [ ! -e #FOLDER# ]; then mkdir -p #FOLDER#; echo "
         cp ${input} ${output}; \
     fi
 
-./#FOLDER#/Makeppfile.auto: FORCE ../scripts/objectsMakeppfile.sh ../scripts/MakeppfileForObjectsTemplate
-    @../scripts/objectsMakeppfile.sh ${MODULEDIR} #SPECIAL_FLAGS_NAME# > ${output}
-    @if [ -e ./#FOLDER#/Makeppfile ] && diff --brief ${output} ./#FOLDER#/Makeppfile >/dev/null ; then \
+target/#FOLDER#/objects.mk.auto: FORCE scripts/objectsMakeppfile.sh scripts/objects.mk.template
+    @./scripts/objectsMakeppfile.sh #SPECIAL_FLAGS_NAME# #VARIANT# > ${output}
+    @if [ -e target/#FOLDER#/Makeppfile ] && diff --brief ${output} target/#FOLDER#/Makeppfile >/dev/null ; then \
         true; \
     else \
-        echo "../scripts/objectsMakeppfile.sh ${MODULEDIR} #SPECIAL_FLAGS_NAME# > ${output}"; \
+        echo "./scripts/objectsMakeppfile.sh #SPECIAL_FLAGS_NAME# #VARIANT# > ${output}"; \
     fi

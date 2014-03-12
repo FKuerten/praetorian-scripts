@@ -15,19 +15,33 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 MODULEDIR="$1"
-TYPE="$2"
-shift 2
-DEPENDENCIES="$@"
-TEMPFILE=$(mktemp)
+SCOPE="$2"
+
+# start with this module
+CONFIG_FILE="${MODULEDIR}/config.mk"
+DEPENDENCIES=$(grep <${CONFIG_FILE} -E "^DEPENDENCIES.?=" | cut -d'=' -f2)
+OURS=$(grep <${CONFIG_FILE} -E "^${SCOPE}.?=" | cut -d'=' -f2)
+
+TRANSITIVE="${OURS}"
+
+#echo "dependencies: ${DEPENDENCIES}" >&2
+#echo "scope: ${SCOPE}" >&2
+#echo "ours: ${OURS}" >&2
+
+# recurse a bit
 for DEPENDENCY in ${DEPENDENCIES}; do
-    echo ${DEPENDENCY}
-    #echo ${DEPENDENCY} >> ${TEMPFILE}
-    #SUB_DIR="${MODULEDIR}/../${DEPENDENCY}"
-    #CONFIG_FILE="${SUB_DIR}/config.mk"
-    #SUB_DEPENDENCIES=$(grep <${CONFIG_FILE} "^DEPENDENCIES=" | cut -d'=' -f2)
-    #$0 ${SUB_DIR} ${SUB_DEPENDENCIES} >> ${TEMPFILE}
+    DEPENDENCY_DIR="${MODULEDIR}/../${DEPENDENCY}"
+    SUB=$($0 ${DEPENDENCY_DIR} ${SCOPE})
+    TRANSITIVE="${TRANSITIVE} ${SUB}"
 done
 
-#cat ${TEMPFILE} | sort --unique
-rm ${TEMPFILE}
+# Clean up
+
+clean () {
+    echo "$@" | awk 'BEGIN { RS="[[:space:]]+"; ORS=" " } !x[$0]++'
+}
+
+TRANSITIVE=$(clean ${TRANSITIVE})
+echo "${TRANSITIVE}"

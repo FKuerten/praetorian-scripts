@@ -24,10 +24,10 @@
 #   scripts/objectsMakeppfile.mk with scripts/objectsMetaMakeppfile.sh
 #
 
-CREATE_DIR:=($print $(shell if [ ! -e ${MODULEDIR}/target ]; then mkdir -p ${MODULEDIR}/target; echo "mkdir -p ${MODULEDIR}/target"; fi))
+CREATE_DIR:=($print $(shell if [ ! -e target ]; then mkdir -p target; echo "mkdir -p target"; fi))
 
 # This recreates the Makeppfile responsible for building the makefile for building the objects
-${MODULEDIR}/target/objectsMakeppfile.mk: ${MODULEDIR}/target/objectsMakeppfile.mk.auto
+target/metaObjects.mk: target/metaObjects.mk.auto
 	# We are checking if they are the same
     @if [ -e ${output} ] && diff --brief ${input} ${output} >/dev/null ; then \
         true; \
@@ -36,10 +36,10 @@ ${MODULEDIR}/target/objectsMakeppfile.mk: ${MODULEDIR}/target/objectsMakeppfile.
         cp ${input} ${output}; \
     fi
 
-${MODULEDIR}/target/objectsMakeppfile.mk.auto: ${MODULEDIR}/scripts/objectsMetaMakeppfile.sh ${MODULEDIR}/scripts/objectsMakeppfile.mk.template
-    @${MODULEDIR}/scripts/objectsMetaMakeppfile.sh ${MODULEDIR} ${CXX_VARIANTS} > ${output}
-    @if [ -e ${MODULEDIR}/target/objectsMakeppfile.mk ] && diff --brief ${output} ${MODULEDIR}/target/objectsMakeppfile.mk >/dev/null ; then \
+target/metaObjects.mk.auto: scripts/objectsMetaMakeppfile.sh scripts/objectsMakeppfile.mk.template
+    @./scripts/objectsMetaMakeppfile.sh ${CXX_VARIANTS} > ${output}
+    @if [ -e target/metaObjects.mk ] && diff --brief ${output} target/metaObjects.mk >/dev/null ; then \
         true; \
     else \
-        echo "${MODULEDIR}/scripts/objectsMetaMakeppfile.sh ${MODULEDIR} ${CXX_VARIANTS} > ${output}"; \
+        echo "scripts/objectsMetaMakeppfile.sh ${CXX_VARIANTS} > ${output}"; \
     fi

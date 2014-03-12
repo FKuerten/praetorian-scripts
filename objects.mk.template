@@ -15,10 +15,10 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-.#PACKAGE#/%.o++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
+target/objects-#VARIANT##PACKAGE#/%.o++: src/main/c++#PACKAGE#/%.c++
+    @mkdir -p target/objects-#VARIANT##PACKAGE#
     ${CXX} ${CPPFLAGS} ${CXXFLAGS} ${#SPECIAL_FLAGS_NAME#} -c ${input} -o ${output}
 
-.#PACKAGE#/%.E++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
+target/objects-#VARIANT##PACKAGE#/%.E++: src/main/c++#PACKAGE#/%.c++
+    @mkdir -p target/objects-#VARIANT##PACKAGE#
     ${CXX} ${CPPFLAGS} ${CXXFLAGS} ${#SPECIAL_FLAGS_NAME#} -E -CC ${input} -o ${output}
