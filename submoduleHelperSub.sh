@@ -89,6 +89,28 @@ while true; do
         done
     elif [ ${FAST_FORWARD_PUSH} -ne 0 ]; then
         echo -e "\tFast-forward \e[0;34mpush\e[0m possible."
+        echo -e "\tI can give you a \e[1mshell\e[0m to do this, \e[1mskip\e[0m this submodule, \e[1mabort\e[0m or do the fast-forward \e[1mpush\e[0m for you."
+        select COMMAND in "shell" "skip" "abort" "push"; do
+            case ${COMMAND} in
+                shell)
+                    echo -e "\tI am starting a sub shell for you in this submodule. Exiting will return to me."
+                    bash --rcfile ${RC_FILE}
+                    break;;
+                skip)
+                    exit 0;;
+                abort)
+                    echo -e "\tOkay, aborting."
+                    exit 1;;
+                push)
+                    echo -e "\tA bit complicated."
+                    LOCAL_BRANCH=$(git branch --no-color | grep -E "^\*" | sed -e "s|^\* ||")
+                    REMOTE=$(git config --local --get branch.${LOCAL_BRANCH}.remote)
+                    echo ${LOCAL_BRANCH} ${REMOTE}
+                    exit 2
+                    #git push
+                    break;;
+            esac
+        done
     elif [ ${HEAD_AND_REMOTE_DIFFERENT} -ne 0 ]; then
         echo -e "\tHEAD and remote are \e[0;31mdifferent\e[0m!"
     else
