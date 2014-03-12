@@ -61,7 +61,7 @@ while true; do
                 skip)
                     exit 0;;
                 abort)
-                    echo "Okay, aborting."
+                    echo -e "\tOkay, aborting."
                     exit 1;;
                 gui)
                     git gui
@@ -80,7 +80,7 @@ while true; do
                 skip)
                     exit 0;;
                 abort)
-                    echo "Okay, aborting."
+                    echo -e "\tOkay, aborting."
                     exit 1;;
                 pull)
                     git pull --ff-only
