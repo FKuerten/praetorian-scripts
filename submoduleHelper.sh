@@ -7,5 +7,9 @@ exec 3< ${TEMP_FILE}
 while read -u 3 FULLPATH NAME SHA1 PARENT
 do
     ./scripts/submoduleHelperSub.sh ${ROOT} ${FULLPATH} ${NAME} ${SHA1} ${PARENT}
+    RETVAL=$?
+    if [ ${RETVAL} -ne 0 ]; then
+        exit ${RETVAL}
+    fi
 done
 rm ${TEMP_FILE}
