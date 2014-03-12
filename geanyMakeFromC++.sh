@@ -22,7 +22,7 @@ SOURCEFILE="$1"
 #echo ${SOURCEFILE}
 SOURCEFILE_FULL=$(readlink -e ${SOURCEFILE})
 SEARCH="src/main/c++/"
-REPLACE="target/objects/"
+REPLACE="target/objects-static-debug/"
 TEMP="${SOURCEFILE_FULL/${SEARCH}/${REPLACE}}"
 OBJECTFILE_FULL="${TEMP/.c++/.o++}"
 OBJECTFILE_FULL="${OBJECTFILE_FULL/.h++/.o++}"
