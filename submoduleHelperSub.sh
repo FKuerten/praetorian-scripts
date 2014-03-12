@@ -104,10 +104,7 @@ while true; do
                     echo -e "\tOkay, aborting."
                     exit 1;;
                 push)
-                    echo -e "\tA bit complicated."
-                    echo ${LOCAL_BRANCH} ${REMOTE}
-                    exit 2
-                    #git push
+                    git push ${REMOTE} ${LOCAL_BRANCH}
                     break;;
             esac
         done
