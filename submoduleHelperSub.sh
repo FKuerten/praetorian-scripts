@@ -34,33 +34,60 @@ while true; do
 
     MERGE_BASE=$(git merge-base ${HEAD_COMMIT} ${REMOTE_COMMIT})
 
+    #echo ${HEAD_COMMIT} ${REMOTE_COMMIT} ${MERGE_BASE}
+
     FAST_FORWARD_PULL=0
     FAST_FORWARD_PUSH=0
     HEAD_AND_REMOTE_DIFFERENT=1
     if [ "${HEAD_COMMIT}" == "${REMOTE_COMMIT}" ] ; then
-        # same
         HEAD_AND_REMOTE_DIFFERENT=0
     elif [ "${HEAD_COMMIT}" == "${MERGE_BASE}" ]; then
-        echo -e "\tFast forward \e[0;32mpull\e[0m possible."
         FAST_FORWARD_PULL=1
     elif [ "${MERGE_BASE}" == "${REMOTE_COMMIT}" ]; then
-        echo -e "\tFast forward \e[0;34m\]push\e[0m possible."
         FAST_FORWARD_PUSH=1
-    else
-        # different
-        echo -e "\tHEAD and remote are \e[0;31mdifferent\e[0m!"
     fi
+
+    #echo ${FAST_FORWARD_PULL} ${FAST_FORWARD_PUSH} ${HEAD_AND_REMOTE_DIFFERENT}
 
     if [ ${DIRTY} -ne 0 ]; then
         echo -e "\t\e[0;31mNeeds manual work!\e[0m"
-        echo -e "\tI am starting a sub shell for you in this submodule. Exiting will return to me."
-        bash --rcfile ${RC_FILE}
-    elif [ ${FAST_FORWARD_PULL} ]; then
-        true
-    elif [ ${FAST_FORWARD_PUSH} ]; then
-        true
-    elif [ ${HEAD_AND_REMOTE_DIFFERENT} ]; then
-        true
+        echo -e "\tI can give you a \e[1mshell\e[0m to commit this, \e[1mskip\e[0m this submodule or \e[1mabort\e[0m."
+        select COMMAND in "shell" "skip" "abort"; do
+            case ${COMMAND} in
+                shell)
+                    echo -e "\tI am starting a sub shell for you in this submodule. Exiting will return to me."
+                    bash --rcfile ${RC_FILE}
+                    break;;
+                skip)
+                    exit 0;;
+                abort)
+                    echo "Okay, aborting."
+                    exit 1;;
+            esac
+        done
+    elif [ ${FAST_FORWARD_PULL} -ne 0 ]; then
+        echo -e "\tFast-forward \e[0;32mpull\e[0m possible."
+        echo -e "\tI can give you a \e[1mshell\e[0m to do this, \e[1mskip\e[0m this submodule, \e[1mabort\e[0m or do the fast-forward \e[1mpull\e[0m for you."
+        select COMMAND in "shell" "skip" "abort" "pull"; do
+            case ${COMMAND} in
+                shell)
+                    echo -e "\tI am starting a sub shell for you in this submodule. Exiting will return to me."
+                    bash --rcfile ${RC_FILE}
+                    break;;
+                skip)
+                    exit 0;;
+                abort)
+                    echo "Okay, aborting."
+                    exit 1;;
+                pull)
+                    git pull --ff-only
+                    break;;
+            esac
+        done
+    elif [ ${FAST_FORWARD_PUSH} -ne 0 ]; then
+        echo -e "\tFast-forward \e[0;34mpush\e[0m possible."
+    elif [ ${HEAD_AND_REMOTE_DIFFERENT} -ne 0 ]; then
+        echo -e "\tHEAD and remote are \e[0;31mdifferent\e[0m!"
     else
         break;
     fi
