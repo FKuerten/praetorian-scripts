@@ -14,7 +14,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-CREATE_DIR:=$(print $(shell if [ ! -e target/#FOLDER# ]; then mkdir -pv target/#FOLDER#; echo "mkdir -pv target/#FOLDER#"; fi))
+CREATE_DIR:=$(shell mkdir -pv target/#FOLDER#)
 
 # This recreates the Makeppfile responsible for building the objects
 target/#FOLDER#/objects.mk: target/#FOLDER#/objects.mk.auto
@@ -27,7 +27,7 @@ target/#FOLDER#/objects.mk: target/#FOLDER#/objects.mk.auto
 
 target/#FOLDER#/objects.mk.auto: FORCE scripts/objectsMakeppfile.sh scripts/objects.mk.template
     @./scripts/objectsMakeppfile.sh #SPECIAL_FLAGS_NAME# #VARIANT# > ${output}
-    @if [ -e target/#FOLDER#/Makeppfile ] && diff --brief ${output} target/#FOLDER#/Makeppfile >/dev/null ; then \
+    @if [ -e target/#FOLDER#/objects.mk ] && diff --brief ${output} target/#FOLDER#/objects.mk >/dev/null ; then \
         true; \
     else \
         echo "./scripts/objectsMakeppfile.sh #SPECIAL_FLAGS_NAME# #VARIANT# > ${output}"; \
