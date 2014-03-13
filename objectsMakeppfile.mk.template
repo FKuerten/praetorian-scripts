@@ -14,7 +14,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-CREATE_DIR:=$(print $(shell if [ ! -e target/#FOLDER# ]; then mkdir -pv target/#FOLDER#; echo "mkdir -pv target/#FOLDER#"; fi))
+CREATE_DIR:=$(shell mkdir -pv target/#FOLDER#)
 
 # This recreates the Makeppfile responsible for building the objects
 target/#FOLDER#/objects.mk: target/#FOLDER#/objects.mk.auto
