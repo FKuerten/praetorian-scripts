@@ -26,7 +26,7 @@ while true; do
     git fetch --all --quiet
 
     HEAD_COMMIT=$(git rev-parse HEAD)
-    REMOTE_COMMIT=$(git rev-parse @{u})
+    REMOTE_COMMIT=$(git rev-parse @{upstream})
 
     git status --short | sed -e 's|^|\t|'
     $(git diff --quiet --exit-code)
@@ -149,7 +149,7 @@ while true; do
                     echo -e "\tOkay, aborting."
                     exit 1;;
                 gui)
-                    gitk
+                    gitk ${LOCAL_BRANCH} @{upstream}
                     break;;
             esac
         done
