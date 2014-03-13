@@ -15,6 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+DUMMY:=$(shell mkdir -pv target/objects-#VARIANT##PACKAGE#)
 target/objects-#VARIANT##PACKAGE#/%.o++: src/main/c++#PACKAGE#/%.c++
     @mkdir -p target/objects-#VARIANT##PACKAGE#
     ${CXX} ${CPPFLAGS} ${CXXFLAGS} ${#SPECIAL_FLAGS_NAME#} -c ${input} -o ${output}
