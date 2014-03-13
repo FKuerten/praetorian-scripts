@@ -21,8 +21,8 @@
 include scripts/common.mk
 
 MODULE_STATIC_NODEBUG_BINARY:=target/${MODULE_NAME}-static
-MODULE_STATIC_DEBUG_BINARY:=target/{MODULE_NAME}-static-debug
-MODULE_DYNAMIC_NODEBUG_BINARY:=target/{MODULE_NAME}-dynamic
+MODULE_STATIC_DEBUG_BINARY:=target/${MODULE_NAME}-static-debug
+MODULE_DYNAMIC_NODEBUG_BINARY:=target/${MODULE_NAME}-dynamic
 MODULE_DYNAMIC_DEBUG_BINARY:=target/${MODULE_NAME}-dynamic-debug
 MODULE_MEGA_OBJECT_NODEBUG_BINARY:=target/${MODULE_NAME}-mega
 MODULE_MEGA_OBJECT_DEBUG_BINARY:=target/${MODULE_NAME}-mega-debug
@@ -50,7 +50,7 @@ ${MODULE_STATIC_DEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_DEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
-	       ${NEEDED_OBJECTS_STATIC_DBUG}\
+	       ${NEEDED_OBJECTS_STATIC_DEBUG}\
 	       -Wl,-Bstatic ${STATIC_LIBS}\
 	                    ${LIBS}\
 	                    ${DEP_LIBS_DEBUG}\
