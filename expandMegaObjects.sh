@@ -17,6 +17,15 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+VARIANT="$1"
+shift
 for MODULE in "$@"; do
-    echo "../${MODULE}/target/lib${MODULE}.a"
+    case ${VARIANT} in
+        nodebug*)
+            echo "../${MODULE}/target/${MODULE}-mega.o"
+            ;;
+        debug*)
+            echo "../${MODULE}/target/${MODULE}-mega-debug.o"
+            ;;
+    esac
 done

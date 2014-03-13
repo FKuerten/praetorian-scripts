@@ -51,6 +51,24 @@
 #                                   dependency
 
 TRANSITIVE_STATIC_LIBRARIES:=$(shell ./scripts/findTransitive.sh . STATIC_LIBRARIES)
-TRANSITIVE_DYNAMIC_LIBRARIES:=$(shell ./scripts/findTransitive.sh . STATIC_LIBRARIES)
+TRANSITIVE_DYNAMIC_LIBRARIES:=$(shell ./scripts/findTransitive.sh . DYNAMIC_LIBRARIES)
 TRANSITIVE_LIBRARIES:=$(shell ./scripts/findTransitive.sh . LIBRARIES)
 TRANSITIVE_DEPENDENCIES:=$(shell ./scripts/findTransitive.sh . DEPENDENCIES)
+
+iftrue ${TRANSITIVE_DEPENDENCIES}
+	MODULE_LIBRARY_PATH:=../${TRANSITIVE_DEPENDENCIES}/target
+	MODULE_LIB_PATH:=$(addprefix -L, ${MODULE_LIBRARY_PATH})
+	DEP_MEGA_DEBUG:=$(shell ./scripts/expandMegaObjects.sh debug ${TRANSITIVE_DEPENDENCIES})
+	DEP_MEGA_NODEBUG:=$(shell ./scripts/expandMegaObjects.sh nodebug ${TRANSITIVE_DEPENDENCIES})
+else
+	MODULE_LIBRARY_PATH:=
+	MODULE_LIB_PATH:=
+	DEP_MEGA_DEBUG:=
+	DEP_MEGA_NODEBUG:=
+endif
+
+STATIC_LIBS:=$(addprefix -l, ${TRANSITIVE_STATIC_LIBRARIES})
+DYNAMIC_LIBS:=$(addprefix -l, ${TRANSITIVE_DYNAMIC_LIBRARIES})
+LIBS:=$(addprefix -l, ${TRANSITIVE_LIBRARIES})
+DEP_LIBS_NODEBUG:=$(addprefix -l, ${TRANSITIVE_DEPENDENCIES})
+DEP_LIBS_DEBUG:=$(addsuffix -debug, ${DEP_LIBS_NODEBUG})

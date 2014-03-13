@@ -48,18 +48,6 @@ INCLUDEDIRS+=target/generated
 
 CPPFLAGS+=-I${INCLUDEDIRS}
 
-#LIBS+=$(addprefix -l,${TRANSITIVE_DEPENDENCIES})
-#LDFLAGS+=-L${CURDIR}/../${TRANSITIVE_DEPENDENCIES}/target/
-#OWN_LIB_FILES=$(shell ./scripts/expandModules.sh ${TRANSITIVE_DEPENDENCIES})
-
-#iftrue ${DEPENDENCIES}
-#	DEPENDENCY_FILES:=${CURDIR}/../${TRANSITIVE_DEPENDENCIES}/target/dependencies
-#	DEPLIBS=$(shell cat ${DEPENDENCY_FILES})
-#else
-#	DEPENDENCY_FILES:=
-#	DEPLIBS:=
-#endif
-
 OBJECTS_STATIC_NODEBUG:=$(shell scripts/findObjects.sh . static-nodebug)
 OBJECTS_STATIC_DEBUG:=$(shell scripts/findObjects.sh . static-debug)
 OBJECTS_DYNAMIC_NODEBUG:=$(shell scripts/findObjects.sh . dynamic-nodebug)
