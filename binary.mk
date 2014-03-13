@@ -35,7 +35,7 @@ NEEDED_OBJECTS_STATIC_NODEBUG:=$(infer_objects target/objects-static-nodebug/cli
 NEEDED_OBJECTS_STATIC_DEBUG:=$(infer_objects target/objects-static-debug/cli/main.o++, ${OBJECTS_STATIC_DEBUG})
 
 # static binaries, nodebug and debug versions
-${MODULE_STATIC_NODEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_NODEBUG}
+${MODULE_STATIC_NODEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_NODEBUG} ${DEPENDENCY_LIBRARY_FILES_STATIC_NODEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
@@ -46,7 +46,7 @@ ${MODULE_STATIC_NODEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_NODEBUG}
 	       -Wl,-Bdynamic ${DYNAMIC_LIBS}\
 	       -o ${output}
 
-${MODULE_STATIC_DEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_DEBUG}
+${MODULE_STATIC_DEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_DEBUG} ${DEPENDENCY_LIBRARY_FILES_STATIC_DEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
@@ -57,7 +57,7 @@ ${MODULE_STATIC_DEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_DEBUG}
 	       -Wl,-Bdynamic ${DYNAMIC_LIBS}\
 	       -o ${output}
 
-${MODULE_DYNAMIC_NODEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_NODEBUG}
+${MODULE_DYNAMIC_NODEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_NODEBUG} ${DEPENDENCY_LIBRARY_FILES_DYNAMIC_NODEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
@@ -68,7 +68,7 @@ ${MODULE_DYNAMIC_NODEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_NODEBUG}
 	                     ${DYNAMIC_LIBS}\
 	       -o ${output}
 
-${MODULE_DYNAMIC_DEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_DEBUG}
+${MODULE_DYNAMIC_DEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_DEBUG} ${DEPENDENCY_LIBRARY_FILES_DYNAMIC_DEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
@@ -79,7 +79,7 @@ ${MODULE_DYNAMIC_DEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_DEBUG}
 	                     ${DYNAMIC_LIBS}\
 	       -o ${output}
 
-${MODULE_MEGA_OBJECT_NODEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_NODEBUG}
+${MODULE_MEGA_OBJECT_NODEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_NODEBUG} ${DEPENDENCY_MEGA_OBJECTS_NODEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${CXX} ${LDFLAGS}\
 	       ${NEEDED_OBJECTS_STATIC_NODEBUG}\
@@ -89,7 +89,7 @@ ${MODULE_MEGA_OBJECT_NODEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_NODEBUG}
 	       -Wl,-Bdynamic ${DYNAMIC_LIBS}\
 	       -o ${output}
 
-${MODULE_MEGA_OBJECT_DEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_DEBUG}
+${MODULE_MEGA_OBJECT_DEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_DEBUG} ${DEPENDENCY_MEGA_OBJECTS_DEBUG}
 	@if [ -e ${output} ]; then rm ${output}; echo "rm ${output}"; fi
 	${CXX} ${LDFLAGS}\
 	       ${NEEDED_OBJECTS_STATIC_DEBUG}\
