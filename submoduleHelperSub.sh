@@ -30,8 +30,18 @@ while true; do
 
     git status --short | sed -e 's|^|\t|'
     $(git diff --quiet --exit-code)
-    DIRTY=$?
-
+    DIRTY_TREE=$?
+    $(git diff --cached --quiet --exit-code)
+    DIRTY_INDEX=$?
+    UNTRACKED_FILES=$(git status --porcelain | wc -l)
+    DIRTY=0
+    if [ ${DIRTY_TREE} -ne 0 ] ; then
+        DIRTY=${DIRTY_TREE}
+    elif [ ${DIRTY_INDEX} -ne 0 ] ; then
+        DIRTY=${DIRTY_INDEX}
+    elif [ ${UNTRACKED_FILES} -ne 0 ] ; then
+        DIRTY=${UNTRACKED_FILES}
+    fi
     MERGE_BASE=$(git merge-base ${HEAD_COMMIT} ${REMOTE_COMMIT})
 
     #echo ${HEAD_COMMIT} ${REMOTE_COMMIT} ${MERGE_BASE}
@@ -50,7 +60,22 @@ while true; do
     #echo ${FAST_FORWARD_PULL} ${FAST_FORWARD_PUSH} ${HEAD_AND_REMOTE_DIFFERENT}
 
     if [ ${DIRTY} -ne 0 ]; then
-        echo -e "\t\e[0;31mNeeds manual work!\e[0m"
+        NEEDS_COMMA=0
+        echo -ne "\t\e[0;31mNeeds manual work:\e[0m "
+        if [ ${DIRTY_TREE} -ne 0 ]; then
+            echo -ne "dirty tree"
+            NEEDS_COMMA=1
+        fi
+        if [ ${DIRTY_INDEX} -ne 0 ]; then
+            if [ ${NEEDS_COMMA} -ne 0 ]; then echo -n ", "; fi
+            echo -ne "dirty cache"
+            NEEDS_COMMA=1
+        fi
+        if [ ${UNTRACKED_FILES} -ne 0 ]; then
+            if [ ${NEEDS_COMMA} -ne 0 ]; then echo -n ", "; fi
+            echo -ne "untracked files"
+        fi
+        echo ""
         echo -e "\tI can give you a \e[1mshell\e[0m to commit this, \e[1mskip\e[0m this submodule, \e[1mabort\e[0m or start \e[1mgit gui\e[0m."
         select COMMAND in "shell" "skip" "abort" "gui"; do
             case ${COMMAND} in
