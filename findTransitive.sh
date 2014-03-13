@@ -37,10 +37,12 @@ for DEPENDENCY in ${DEPENDENCIES}; do
     TRANSITIVE="${TRANSITIVE} ${SUB}"
 done
 
+#echo "before clean ${TRANSITIVE}" >&2
+
 # Clean up
 
 clean () {
-    echo "$@" | awk 'BEGIN { RS="[[:space:]]+"; ORS=" " } !x[$0]++'
+    echo "$@" | tr ' ' '\n' | tac | awk '!x[$0]++' | tac | tr '\n' ' '
 }
 
 TRANSITIVE=$(clean ${TRANSITIVE})
