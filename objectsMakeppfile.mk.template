@@ -27,7 +27,7 @@ target/#FOLDER#/objects.mk: target/#FOLDER#/objects.mk.auto
 
 target/#FOLDER#/objects.mk.auto: FORCE scripts/objectsMakeppfile.sh scripts/objects.mk.template
     @./scripts/objectsMakeppfile.sh #SPECIAL_FLAGS_NAME# #VARIANT# > ${output}
-    @if [ -e target/#FOLDER#/Makeppfile ] && diff --brief ${output} target/#FOLDER#/Makeppfile >/dev/null ; then \
+    @if [ -e target/#FOLDER#/objects.mk ] && diff --brief ${output} target/#FOLDER#/objects.mk >/dev/null ; then \
         true; \
     else \
         echo "./scripts/objectsMakeppfile.sh #SPECIAL_FLAGS_NAME# #VARIANT# > ${output}"; \
