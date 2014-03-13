@@ -33,7 +33,7 @@ while true; do
     DIRTY_TREE=$?
     $(git diff --cached --quiet --exit-code)
     DIRTY_INDEX=$?
-    UNTRACKED_FILES=$(git status --porcelain | wc -l)
+    UNTRACKED_FILES=$(git status --porcelain | grep "^??" | wc -l)
     DIRTY=0
     if [ ${DIRTY_TREE} -ne 0 ] ; then
         DIRTY=${DIRTY_TREE}
