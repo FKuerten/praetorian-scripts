@@ -59,6 +59,9 @@ while true; do
 
     #echo ${FAST_FORWARD_PULL} ${FAST_FORWARD_PUSH} ${HEAD_AND_REMOTE_DIFFERENT}
 
+    LOCAL_BRANCH=$(git branch --no-color | grep -E "^\*" | sed -e "s|^\* ||")
+    REMOTE=$(git config --local --get branch.${LOCAL_BRANCH}.remote)
+
     if [ ${DIRTY} -ne 0 ]; then
         NEEDS_COMMA=0
         echo -ne "\t\e[0;31mNeeds manual work:\e[0m "
@@ -113,8 +116,6 @@ while true; do
             esac
         done
     elif [ ${FAST_FORWARD_PUSH} -ne 0 ]; then
-        LOCAL_BRANCH=$(git branch --no-color | grep -E "^\*" | sed -e "s|^\* ||")
-        REMOTE=$(git config --local --get branch.${LOCAL_BRANCH}.remote)
         echo -e "\tFast-forward \e[0;34mpush\e[0m possible."
         echo -e "\tI can give you a \e[1mshell\e[0m to do this, \e[1mskip\e[0m this submodule, \e[1mabort\e[0m or do the fast-forward \e[1mgit push ${REMOTE} ${LOCAL_BRANCH}\e[0m for you."
         select COMMAND in "shell" "skip" "abort" "push"; do
