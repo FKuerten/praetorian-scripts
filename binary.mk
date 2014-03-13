@@ -40,9 +40,9 @@ ${MODULE_STATIC_NODEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_NODEBUG} ${DEPENDENCY_L
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
 	       ${NEEDED_OBJECTS_STATIC_NODEBUG}\
-	       -Wl,-Bstatic ${STATIC_LIBS}\
+	       -Wl,-Bstatic ${DEP_LIBS_NODEBUG}\
+	                    ${STATIC_LIBS}\
 	                    ${LIBS}\
-	                    ${DEP_LIBS_NODEBUG}\
 	       -Wl,-Bdynamic ${DYNAMIC_LIBS}\
 	       -o ${output}
 
@@ -51,9 +51,9 @@ ${MODULE_STATIC_DEBUG_BINARY}: ${NEEDED_OBJECTS_STATIC_DEBUG} ${DEPENDENCY_LIBRA
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
 	       ${NEEDED_OBJECTS_STATIC_DEBUG}\
-	       -Wl,-Bstatic ${STATIC_LIBS}\
+	       -Wl,-Bstatic ${DEP_LIBS_DEBUG}\
 	                    ${LIBS}\
-	                    ${DEP_LIBS_DEBUG}\
+	                    ${STATIC_LIBS}\
 	       -Wl,-Bdynamic ${DYNAMIC_LIBS}\
 	       -o ${output}
 
@@ -62,9 +62,9 @@ ${MODULE_DYNAMIC_NODEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_NODEBUG} ${DEPENDENCY
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
 	       ${NEEDED_OBJECTS_STATIC_NODEBUG}\
+	       -Wl,-Bdynamic ${DEP_LIBS_NODEBUG}\
 	       -Wl,-Bstatic ${STATIC_LIBS}\
 	       -Wl,-Bdynamic ${LIBS}\
-	                     ${DEP_LIBS_NODEBUG}\
 	                     ${DYNAMIC_LIBS}\
 	       -o ${output}
 
@@ -73,9 +73,9 @@ ${MODULE_DYNAMIC_DEBUG_BINARY} : ${NEEDED_OBJECTS_STATIC_DEBUG} ${DEPENDENCY_LIB
 	${CXX} ${LDFLAGS}\
 	       ${MODULE_LIB_PATH} \
 	       ${NEEDED_OBJECTS_STATIC_DEBUG}\
+	       -Wl,-Bdynamic ${DEP_LIBS_DEBUG}\
 	       -Wl,-Bstatic ${STATIC_LIBS}\
 	       -Wl,-Bdynamic ${LIBS}\
-	                     ${DEP_LIBS_DEBUG}\
 	                     ${DYNAMIC_LIBS}\
 	       -o ${output}
 
