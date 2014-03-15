@@ -23,7 +23,7 @@
 CXX_WARNINGS=-Wall -Wdisabled-optimization -Wfloat-equal -Wold-style-cast
 CXX_WARNINGS+=-Wsign-conversion -Wsign-promo -Wswitch-default
 CXX_WARNINGS+=-Wzero-as-null-pointer-constant -Wuseless-cast
-CXX_WARNINGS+=-Wconversion -Wconversion-extra -Wconversion-null
+CXX_WARNINGS+=-Wconversion -Wconversion-null
 
 # Some special flags
 CXXFLAGS:=--std=${CXX_STANDARD} ${CXX_WARNINGS} -Werror
