@@ -24,6 +24,10 @@ EOF
 while true; do
     echo "In submodule ${FULLPATH}"
     git fetch --all --quiet
+    if [ $? -ne 0 ] ; then
+        echo "git fetch failed" >&2
+        return 1
+    fi
 
     HEAD_COMMIT=$(git rev-parse HEAD)
     REMOTE_COMMIT=$(git rev-parse @{upstream})
