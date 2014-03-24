@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+set -o nounset
+set -o errexit
+set -o pipefail
+
 ROOT=$(git rev-parse --show-toplevel)
 TEMP_FILE=$(mktemp)
 git submodule foreach --recursive --quiet "PWD=\$(pwd); echo \${PWD#${ROOT}/} \$name \$sha1 \$toplevel" | sort -r > ${TEMP_FILE}

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+set -o nounset
+set -o errexit
+set -o pipefail
 
 ROOT="$1"
 FULLPATH="$2"
@@ -33,12 +36,14 @@ while true; do
     REMOTE_COMMIT=$(git rev-parse @{upstream})
 
     git status --short | sed -e 's|^|\t|'
-    $(git diff --quiet --exit-code)
-    DIRTY_TREE=$?
-    $(git diff --cached --quiet --exit-code)
-    DIRTY_INDEX=$?
-    UNTRACKED_FILES=$(git status --porcelain | grep "^??" | wc -l)
-    DIRTY=0
+    DIRTY_TREE=0
+    $(git diff --quiet --exit-code) || DIRTY_TREE=1
+
+    DIRTY_INDEX=0
+    $(git diff --cached --quiet --exit-code) || DIRTY_INDEX=1
+
+    UNTRACKED_FILES=$(git status --porcelain | grep --count "^??" || true)
+    DIRTY="0"
     if [ ${DIRTY_TREE} -ne 0 ] ; then
         DIRTY=${DIRTY_TREE}
     elif [ ${DIRTY_INDEX} -ne 0 ] ; then
