@@ -33,7 +33,16 @@ while true; do
     fi
 
     HEAD_COMMIT=$(git rev-parse HEAD)
+    set +o errexit
     REMOTE_COMMIT=$(git rev-parse @{upstream})
+    RETVAL="$?"
+    set -o errexit
+    if [[ ${RETVAL} -ne 0 ]]; then
+        echo "Cannot find upstream branch, see error above" >&2
+        echo "I am giving you a shell to work on this." >&2
+        bash --rcfile ${RC_FILE}
+        break
+    fi
 
     git status --short | sed -e 's|^|\t|'
     DIRTY_TREE=0
