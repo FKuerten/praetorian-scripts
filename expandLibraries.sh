@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #
 #   Copyright 2014 Fabian "Praetorian" Kürten
 #
@@ -15,13 +17,21 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-MODULEDIR:=../..
-include ../../config.mk
-
-.#PACKAGE#/%.o++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
-    ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c ${input} -o ${output}
-
-.#PACKAGE#/%.E++: ../../src/main/c++#PACKAGE#/%.c++
-    @mkdir -p .#PACKAGE#
-    ${CXX} ${CPPFLAGS} ${CXXFLAGS} -E -CC ${input} -o ${output}
+VARIANT="$1"
+shift
+for MODULE in "$@"; do
+    case ${VARIANT} in
+        static-nodebug*)
+            echo "../${MODULE}/target/lib${MODULE}.a"
+            ;;
+        static-debug*)
+            echo "../${MODULE}/target/lib${MODULE}-debug.a"
+            ;;
+        static-nodebug*)
+            echo "../${MODULE}/target/lib${MODULE}.so"
+            ;;
+        static-debug*)
+            echo "../${MODULE}/target/lib${MODULE}-debug.so"
+            ;;
+    esac
+done

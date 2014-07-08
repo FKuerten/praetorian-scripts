@@ -17,16 +17,20 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-SRC_FOLDER="src/main/c++"
-FOLDERS=$(find ${SRC_FOLDER} -type d | grep -v "/\.")
-MAKEPPFILE_TEMPLATE="scripts/MakeppfileForObjectsTemplate"
+#
+#   This file creates a makeppfile to create makeppfiles for the objects.
+#
+#
 
-echo "MODULEDIR:=../.."
-echo "include ../../config.mk"
+VARIANTS="$@"
+MAKEPPFILE_TEMPLATE="scripts/objectsMakeppfile.mk.template"
 
-for FOLDER in ${FOLDERS}; do
-    PACKAGE=${FOLDER#src/main/c++*}
-    #echo ${FOLDER}
-    #echo ${PACKAGE}
-    sed <${MAKEPPFILE_TEMPLATE} --expression="s!#PACKAGE#!${PACKAGE}!g"
+for VARIANT in ${VARIANTS}; do
+    FOLDER="objects-${VARIANT}"
+    UPPERCASED=$(echo ${VARIANT} | tr [:lower:] [:upper:] | tr '-' '_')
+    SPECIAL_FLAGS_NAME="CXXFLAGS_${UPPERCASED}"
+
+    sed <${MAKEPPFILE_TEMPLATE} --expression="s!#FOLDER#!${FOLDER}!g" \
+                                --expression="s!#SPECIAL_FLAGS_NAME#!${SPECIAL_FLAGS_NAME}!g" \
+                                --expression="s!#VARIANT#!${VARIANT}!g"
 done

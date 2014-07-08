@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 #
 #   Copyright 2014 Fabian "Praetorian" Kürten
 #
@@ -16,22 +15,35 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-MODULEDIR="$1"
-VARIANT="$2"
-SRC_FOLDER="${MODULEDIR}/src/main/c++"
-TARGET_FOLDER="${MODULEDIR}/target/objects-${VARIANT}"
-FILES=$(find -L ${SRC_FOLDER} -type f -name "*.c++")
 
-for FILE in ${FILES}; do
-    PACKAGE_FILE_EXT=${FILE#${SRC_FOLDER}*}
-    PACKAGE_FILE=${PACKAGE_FILE_EXT%.c++}
-    OBJECT="${PACKAGE_FILE}.o++"
-    #echo ${FILE}
-    #echo ${PACKAGE_FILE_EXT}
-    #echo ${PACKAGE_FILE}
-    TARGET_FILE="${TARGET_FOLDER}${OBJECT}"
-    TARGET_PACKAGE=$(dirname ${TARGET_FILE})
-    mkdir -p ${TARGET_PACKAGE}
-    echo "${TARGET_FILE}"
+MODULEDIR="$1"
+SCOPE="$2"
+
+# start with this module
+CONFIG_FILE="${MODULEDIR}/config.mk"
+DEPENDENCIES=$(grep <${CONFIG_FILE} -E "^DEPENDENCIES.?=" | cut -d'=' -f2)
+OURS=$(grep <${CONFIG_FILE} -E "^${SCOPE}.?=" | cut -d'=' -f2)
+
+TRANSITIVE="${OURS}"
+
+#echo "dependencies: ${DEPENDENCIES}" >&2
+#echo "scope: ${SCOPE}" >&2
+#echo "ours: ${OURS}" >&2
+
+# recurse a bit
+for DEPENDENCY in ${DEPENDENCIES}; do
+    DEPENDENCY_DIR="${MODULEDIR}/../${DEPENDENCY}"
+    SUB=$($0 ${DEPENDENCY_DIR} ${SCOPE})
+    TRANSITIVE="${TRANSITIVE} ${SUB}"
 done
 
+#echo "before clean ${TRANSITIVE}" >&2
+
+# Clean up
+
+clean () {
+    echo "$@" | tr ' ' '\n' | tac | awk '!x[$0]++' | tac | tr '\n' ' '
+}
+
+TRANSITIVE=$(clean ${TRANSITIVE})
+echo "${TRANSITIVE}"

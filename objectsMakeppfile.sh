@@ -17,6 +17,17 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-for MODULE in "$@"; do
-    echo "../${MODULE}/target/lib${MODULE}.a"
+SPECIAL_FLAGS_NAME="$1"
+VARIANT="$2"
+SRC_FOLDER="src/main/c++"
+FOLDERS=$(find -L ${SRC_FOLDER} -type d | grep -v "/\.")
+MAKEPPFILE_TEMPLATE="scripts/objects.mk.template"
+
+for FOLDER in ${FOLDERS}; do
+    PACKAGE=${FOLDER#${SRC_FOLDER}*}
+    #echo ${FOLDER} >&2
+    #echo ${PACKAGE} >&2
+    sed <${MAKEPPFILE_TEMPLATE} --expression="s!#PACKAGE#!${PACKAGE}!g" \
+                                --expression="s!#SPECIAL_FLAGS_NAME#!${SPECIAL_FLAGS_NAME}!g" \
+                                --expression="s!#VARIANT#!${VARIANT}!g"
 done

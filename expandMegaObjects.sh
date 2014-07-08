@@ -16,22 +16,16 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-MODULEDIR="$1"
-VARIANT="$2"
-SRC_FOLDER="${MODULEDIR}/src/main/c++"
-TARGET_FOLDER="${MODULEDIR}/target/objects-${VARIANT}"
-FILES=$(find -L ${SRC_FOLDER} -type f -name "*.c++")
 
-for FILE in ${FILES}; do
-    PACKAGE_FILE_EXT=${FILE#${SRC_FOLDER}*}
-    PACKAGE_FILE=${PACKAGE_FILE_EXT%.c++}
-    OBJECT="${PACKAGE_FILE}.o++"
-    #echo ${FILE}
-    #echo ${PACKAGE_FILE_EXT}
-    #echo ${PACKAGE_FILE}
-    TARGET_FILE="${TARGET_FOLDER}${OBJECT}"
-    TARGET_PACKAGE=$(dirname ${TARGET_FILE})
-    mkdir -p ${TARGET_PACKAGE}
-    echo "${TARGET_FILE}"
+VARIANT="$1"
+shift
+for MODULE in "$@"; do
+    case ${VARIANT} in
+        nodebug*)
+            echo "../${MODULE}/target/${MODULE}-mega.o"
+            ;;
+        debug*)
+            echo "../${MODULE}/target/${MODULE}-mega-debug.o"
+            ;;
+    esac
 done
-

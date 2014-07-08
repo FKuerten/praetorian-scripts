@@ -15,10 +15,20 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+#
+#	This one is a bit crazy.
+#   This makefile is responsible for creating the makefile to create the
+#   makefiles to create the objects.
+#   Confused?
+#   It creates target/objectsMakeppfile.mk from
+#   scripts/objectsMakeppfile.mk with scripts/objectsMetaMakeppfile.sh
+#
 
-# This is responsible for creating a version header
-target/generated/version.h++: target/generated/version.h++.auto
-    @if [ ! -e target/generated ]; then mkdir -p target/generated; echo "mkdir -p target/generated"; fi
+CREATE_DIR:=($print $(shell if [ ! -e target ]; then mkdir -p target; echo "mkdir -p target"; fi))
+
+# This recreates the Makeppfile responsible for building the makefile for building the objects
+target/metaObjects.mk: target/metaObjects.mk.auto
+	# We are checking if they are the same
     @if [ -e ${output} ] && diff --brief ${input} ${output} >/dev/null ; then \
         true; \
     else \
@@ -26,11 +36,10 @@ target/generated/version.h++: target/generated/version.h++.auto
         cp ${input} ${output}; \
     fi
 
-target/generated/version.h++.auto: FORCE scripts/generateVersionH++.sh
-    @if [ ! -e target/generated ]; then mkdir -p target/generated; echo "mkdir -p target/generated"; fi
-    @./scripts/generateVersionH++.sh ${MODULE_NAME} > ${output}
-    @if [ -e target/generated/version.h++ ] && diff --brief ${output} target/generated/version.h++ >/dev/null ; then \
+target/metaObjects.mk.auto: scripts/objectsMetaMakeppfile.sh scripts/objectsMakeppfile.mk.template
+    @./scripts/objectsMetaMakeppfile.sh ${CXX_VARIANTS} > ${output}
+    @if [ -e target/metaObjects.mk ] && diff --brief ${output} target/metaObjects.mk >/dev/null ; then \
         true; \
     else \
-        echo "./scripts/generateVersionH++.sh ${MODULE_NAME} > ${output}"; \
+        echo "scripts/objectsMetaMakeppfile.sh ${CXX_VARIANTS} > ${output}"; \
     fi
